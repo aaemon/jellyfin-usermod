@@ -1,11 +1,28 @@
 <?php
 
+// Load environment variables from .env file
+function loadEnv($file) {
+    if (!file_exists($file)) return;
+    
+    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos($line, '#') === 0) continue; // Skip comments
+        
+        $parts = explode('=', $line, 2);
+        if (count($parts) == 2) {
+            $_ENV[trim($parts[0])] = trim($parts[1]);
+        }
+    }
+}
+
+loadEnv(__DIR__ . '/.env');
+
 // Set content type
 header('Content-Type: application/json');
 
 // Jellyfin API configuration
-$jellyfinUrl = 'http://192.168.123.18:8096';
-$apiKey = '38b3c72f84ee46b6bff66273d52523f9';
+$jellyfinUrl = $_ENV['JELLYFIN_URL'] ?? 'http://192.168.123.18:8096';
+$apiKey = $_ENV['JELLYFIN_API_KEY'] ?? '';
 
 // Function to make HTTP requests to Jellyfin API
 function jellyfinRequest($url, $method = 'GET', $data = null) {
