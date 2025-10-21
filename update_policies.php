@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 
 // Simple CLI tool to update Jellyfin user permissions
